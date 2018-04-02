@@ -14,7 +14,7 @@ Available templates as 3/5/2018:
 
 Area chart [DEMO](http://striblab.github.io/20180305-youdrawit/area_chart)
 
-Bar chart (vertical) [DEMO](http://striblab.github.io/20180305-youdrawit/bar_chart
+Bar chart (vertical) [DEMO](http://striblab.github.io/20180305-youdrawit/bar_chart)
 
 Bar chart (horizontal) [DEMO](http://striblab.github.io/20180305-youdrawit/horizontal_bar_chart)
 
