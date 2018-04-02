@@ -13,13 +13,21 @@ Available templates as 3/5/2018:
 
 
 Area chart [DEMO](http://striblab.github.io/20180305-youdrawit/area_chart)
-Bar chart (vertical) [DEMO](http://striblab.github.io/20180305-youdrawit/bar_chart)
+
+Bar chart (vertical) [DEMO](http://striblab.github.io/20180305-youdrawit/bar_chart
+
 Bar chart (horizontal) [DEMO](http://striblab.github.io/20180305-youdrawit/horizontal_bar_chart)
+
 Line chart (backward propogation) [DEMO](http://striblab.github.io/20180305-youdrawit/line_backward)
+
 Line chart (forward propogation) [DEMO](http://striblab.github.io/20180305-youdrawit/line_forward)
+
 Line chart (midway propogation) [DEMO](http://striblab.github.io/20180305-youdrawit/line_mid_backward)
+
 Line chart (multiline) [DEMO](http://striblab.github.io/20180305-youdrawit/multiline_chart)
+
 Recording results (line chart) [DEMO](http://striblab.github.io/20180305-youdrawit/result_record)
+
 Map polygons [DEMO](http://striblab.github.io/20180305-youdrawit/map)
 
 
