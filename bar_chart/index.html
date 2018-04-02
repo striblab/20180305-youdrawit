@@ -1,0 +1,391 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>YouDrawIt Vertical Bar Chart</title>
+    <meta name="description" content="U.S. Census you draw it">
+    <meta name="author" content="Frey Hargarten - StarTribune">
+    <meta name="generator" content="BBEdit 10.5" />
+    <link rel="shortcut icon" href="./img/favicon.ico">
+
+    <style type="text/css">
+        @font-face {
+            font-family: "Benton Sans Condensed Medium";
+            src: url("//apps.startribune.com/fonts/Benton-Sans-Condensed-Medium/06f4dbf6-2449-4b99-9621-e8abb9e595a2-2.eot");
+            src: url("//apps.startribune.com/fonts/Benton-Sans-Condensed-Medium/06f4dbf6-2449-4b99-9621-e8abb9e595a2-2.eot?") format("embedded-opentype"), url("//apps.startribune.com/fonts/Benton-Sans-Condensed-Medium/06f4dbf6-2449-4b99-9621-e8abb9e595a2-3.woff") format("woff"), url("//apps.startribune.com/fonts/Benton-Sans-Condensed-Medium/06f4dbf6-2449-4b99-9621-e8abb9e595a2-1.ttf") format("truetype");
+            font-style: normal;
+            font-weight: normal;
+            font-display: swap
+        }
+
+        svg {
+            overflow: visible;
+        }
+
+        body {
+            font-family: Benton Sans Condensed Medium,Helvetica,Arial,sans-serif;
+            margin: 0px;
+            font-size: 16.5px;
+            font-weight: normal;
+            padding-bottom: 10px;
+        }
+
+        #wrapper {
+            width:520px;
+            margin-right:auto;
+            margin-left:auto;
+            text-align:center;
+            font-family:Helvetica !important;
+        }
+
+        #chart { 
+            text-align:center;
+        }
+
+        .selection {
+          fill: #9C0004;
+          fill-opacity: 1;
+        }
+
+
+        .noclicky rect {
+          pointer-events:none !important;
+        }
+        
+        .noclicky .selection {
+          fill: #333333 !important;
+        }
+
+        .legendary {
+            padding:4px;
+            color: #fff;
+            font-weight:bold;
+            border-radius: 5px;
+            padding: 0 7px;
+            margin-bottom: 3px;
+        }
+
+        .red4 {
+          fill: #C22A22;
+          background-color: #C22A22;
+        }
+
+        .gray5 {
+          fill: #252525;
+          background-color: #252525;
+          color: #fff;
+        }
+
+        .btn {
+            font-family: “Open Sans”, Helvetica, Arial, sans-serif;
+            background-color: #888888;
+            opacity: 1;
+            color: #fff;
+            font-weight: 700;
+            font-size: 16px;
+            margin:auto;
+            width: auto;
+            cursor: pointer;
+            clear:both;
+            padding: 8px 16px 10px 16px;
+            border: 0 none;
+            text-align: center;
+            -webkit-appearance: none;
+            transition: background-color 0.25s ease-out;
+            text-decoration: none;
+            line-height: 24px;
+            -webkit-font-smoothing: antialiased;
+        }
+
+        .btn:hover,
+        .btn:focus {
+            outline: none;
+        }
+
+        #answer {
+            max-width: 600px;
+        }
+
+        #answer p {
+            -webkit-margin-before: 0px;
+            -webkit-margin-after: 20px;
+            line-height:160%;
+        }
+
+        #buttonRow {
+            max-width: 600px;
+            clear:both;
+            display:block;
+            margin-top:50px;
+        }   
+
+
+        @media only screen and (max-width:520px) {
+            #chart, #wrapper {
+                width: 100%;
+            }
+        }
+    </style>
+</head>
+<body>
+
+<div id="wrapper">
+
+<!-- <div class="chatter"><span class="legendary red4">your guess</span> <span class="legendary gray5">answer</span></div> -->
+
+<div id="chart"><svg></svg></div>
+
+<!-- viewBox="0 0 600 300" preserveAspectRatio="xMidYMid" -->
+
+<div id="buttonRow" style="text-align:center;">
+<button type="button" id="showMe" class="btn">check answer</button>
+</div>
+
+<div id="answer" style="text-align:left;"><p></p></div>
+</div>
+
+<script src="./js/d3v4.js"></script>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+<script>
+
+var data_init = [{
+        index: 0,
+        value: 1
+    },
+    {
+        index: 1,
+        value: 1
+    },
+    {
+        index: 2,
+        value: 1
+    },
+    {
+        index: 3,
+        value: 1
+    },
+    {
+        index: 4,
+        value: 1
+    },
+    {
+        index: 5,
+        value: 1
+    },
+    {
+        index: 6,
+        value: 1
+    },
+    {
+        index: 7,
+        value: 1
+    }
+];
+
+var data_answer = [{
+        index: 0,
+        value: 3
+    },
+    {
+        index: 1,
+        value: 1
+    },
+    {
+        index: 2,
+        value: 5
+    },
+    {
+        index: 3,
+        value: 8
+    },
+    {
+        index: 4,
+        value: 3
+    },
+    {
+        index: 5,
+        value: 5
+    },
+    {
+        index: 6,
+        value: 3
+    },
+    {
+        index: 7,
+        value: 6
+    }
+];
+
+var data_guess = [];
+
+function drawIt(container, data, status, oldData) {
+
+    // var aspect = 600 / 300;
+    // var targetWidth = $(container).width();
+    // console.log(targetWidth);
+    // $(container + " svg").attr("width", targetWidth);
+    // $(container + " svg").attr("height", targetWidth / aspect);
+
+    // $(window).on("resize", function() {
+    //     $(container + " svg").attr("width", targetWidth);
+    //     $(container + " svg").attr("height", targetWidth / aspect);
+    // });
+
+    var margin = {top: 10, right: 10, bottom: 10, left: 10}
+
+    var widthY = $(container).width() - margin.left - margin.right,
+        heightY = 250 - margin.top - margin.bottom,
+        delim = 4;
+
+    var scaleY = d3.scaleLinear()
+        .domain([0, 21])
+        .rangeRound([heightY, 0]);
+
+    var y = d3.scaleLinear()
+        .domain([0, data.length])
+        .rangeRound([0, heightY]);
+
+    var x = d3.scaleLinear()
+        .domain([0, data.length])
+        .rangeRound([0, widthY]);
+
+    var svgY = d3.select(container + " svg")
+        .attr("width", widthY)
+        .attr("height", heightY)
+        .append('g')
+        .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
+
+    svgY
+        .append('rect')
+        .attr('x', 0)
+        .attr('y', 0)
+        .style('stroke', 'white')
+        .style('fill', 'white')
+        .attr('width', widthY)
+        .attr('height', heightY)
+        .transition().duration(1000);
+
+    
+    var xAxis = d3.axisBottom(x).tickSize(7);
+    // var yAxis = d3.axisLeft(y).tickSize(7);
+
+
+
+    // var ysCont = svgY.append('g')
+    //     .call(yAxis);
+
+    // Moveable barChart
+
+    var brushY = d3.brushY()
+        .extent(function(d, i) {
+            return [
+                [x(i) + delim / 2, 0],
+                [x(i) + x(1) - delim / 2, heightY]
+            ];
+        })
+        .on("brush", brushmoveY)
+        .on("end", brushendY);
+
+    var svgbrushY = svgY
+        .selectAll('.brush')
+        .data(data)
+        .enter()
+        .append('g')
+        .attr('class', function(d) {
+            if (status == "guess") {
+                return 'brush';
+            } else {
+                return 'noclicky brush';
+            }
+        })
+        .append('g')
+        .call(brushY)
+        .call(brushY.move, function(d) {
+            return [d.value, 0].map(scaleY);
+        });
+
+    svgbrushY
+        .append('text')
+        .attr('y', function(d) {
+            return scaleY(d.value) + 25;
+        })
+        .attr('x', function(d, i) {
+            return x(i) + x(0.5);
+        })
+        .attr('dx', -29)
+        .attr('dy', -35)
+        .style('fill', 'black')
+        .text(function(d, i) {
+            if (status == "guess" || isNaN(data_guess[i])) {
+                return d3.format('.2')(d.value);
+            } else {
+                return d3.format('.2')(d.value) + " (" + d3.format('.2')(data_guess[i]) + ")";
+            }
+        });
+
+        var xsCont = svgY.append('g').call(xAxis);
+        
+    function brushendY() {
+        if (!d3.event.sourceEvent) return;
+        if (d3.event.sourceEvent.type === "brush") return;
+        if (!d3.event.selection) { // just in case of click with no move
+            svgbrushY
+                .call(brushY.move, function(d) {
+                    return [d.value, 0].map(scaleY);
+                })
+        };
+
+    }
+
+    function brushmoveY() {
+        if (!d3.event.sourceEvent) return;
+        if (d3.event.sourceEvent.type === "brush") return;
+        if (!d3.event.selection) return;
+
+        var d0 = d3.event.selection.map(scaleY.invert);
+
+        if (status == "guess" || isNaN(data_guess[i])) {
+            var d = d3.select(this).select('.selection');
+        } else {
+            var d = d3.select(this).select('.answer');
+        }
+
+        d.datum().value = d0[0]; // Change the value of the original data
+
+        update();
+    }
+
+
+    function update() {
+        svgbrushY
+            .call(brushY.move, function(d, i) {
+                data_guess[i] = d.value;
+                return [d.value, 0].map(scaleY);
+            })
+            .selectAll('text')
+            .attr('y', function(d) {
+                return scaleY(d.value) + 25;
+            })
+            .text(function(d) {
+                return d3.format('.2')(d.value);
+            });
+    }
+
+        
+
+}
+
+drawIt("#chart", data_init, "guess");
+
+$("#showMe").click(function() {
+    drawIt("#chart", data_answer, "answer", data_guess);
+    $("#answer").fadeIn( "slow", function() {
+        $(this).html("Explanation here");
+      });
+});
+
+    </script>
+</body>
+</html>
