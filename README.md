@@ -9,7 +9,7 @@ Various solutions forked from [ONS Visual](https://github.com/ONSvisual/ONSvisua
 Built using Mike Bostock's [D3](https://github.com/mbostock/d3), [Mapbox GL JS](https://github.com/mapbox/mapbox-gl-js) and [jQuery](https://github.com/jquery/jquery).
 
 
-Available templates as 3/5/2018:
+Available templates as of 3/5/2018:
 
 
 Area chart [DEMO](http://striblab.github.io/20180305-youdrawit/area_chart)
