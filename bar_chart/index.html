@@ -45,8 +45,13 @@
         }
 
         .selection {
-          fill: #9C0004;
-          fill-opacity: 1;
+/*          fill: #9C0004;
+          fill-opacity: 1;*/
+            fill: none;
+            stroke: #333333;
+            stroke-width: 1;
+            stroke-dasharray: 5 5;
+            cursor: pointer;
         }
 
 
@@ -56,6 +61,8 @@
         
         .noclicky .selection {
           fill: #333333 !important;
+          fill-opacity: 1;
+          stroke-dasharray: 0;
         }
 
         .legendary {
@@ -269,7 +276,7 @@ function drawIt(container, data, status, oldData) {
 
     
     var xAxis = d3.axisBottom(x).tickSize(7);
-    // var yAxis = d3.axisLeft(y).tickSize(7);
+    var yAxis = d3.axisLeft(y).tickSize(7);
 
 
 
@@ -325,7 +332,7 @@ function drawIt(container, data, status, oldData) {
             }
         });
 
-        var xsCont = svgY.append('g').call(xAxis);
+        
         
     function brushendY() {
         if (!d3.event.sourceEvent) return;
@@ -373,7 +380,7 @@ function drawIt(container, data, status, oldData) {
             });
     }
 
-        
+       var xsCont = svgY.append('g').call(xAxis).attr("transform", "translate(0," + heightY + ")"); 
 
 }
 
