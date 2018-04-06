@@ -275,8 +275,8 @@ function drawIt(container, data, status, oldData) {
         .transition().duration(1000);
 
     
-    var xAxis = d3.axisBottom(x).tickSize(7);
-    var yAxis = d3.axisLeft(y).tickSize(7);
+    var xAxis = d3.axisBottom(x).tickSize(10).tickPadding(5).tickSizeOuter(0);
+    var yAxis = d3.axisLeft(y).tickSize(10);
 
 
 
